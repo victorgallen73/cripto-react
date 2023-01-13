@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import useSelectCurrency from '../hooks/useSelectCurrency'
 import styled from '@emotion/styled';
 import { currencies } from '../data/currencies';
@@ -24,28 +24,58 @@ const InputSubmit = styled.input`
 
 const Form = () => {
 
+  const  [ criptos, setCriptos ] = useState([]);
+  const  [ error, setError ] = useState(false);
+  
   const  [ currency, SelectCurrency ] = useSelectCurrency('Select your currency', currencies);
+  const  [ cripto, SelectCripto ] = useSelectCurrency('Select your cripto currency', criptos);
 
   useEffect ( () => {
     const consultAPI = async () => {
         const url = 'https://min-api.cryptocompare.com/data/top/mktcapfull?limit=10&tsym=USD';
         const response = await fetch(url);
         const result = await response.json();
+
+        const arrayCriptos = result?.Data.map( cripto => {
+            const criptoObj = {
+                id: cripto?.CoinInfo?.Name,
+                name: cripto?.CoinInfo?.FullName
+            }
+            return criptoObj;
+        });
+
+        setCriptos(arrayCriptos);
     }
 
     consultAPI();
   }, [])
 
+  const handleSubmit = e => {
+    e.preventDefault();
+
+    if ([currency, cripto].includes('')) {
+        setError(true);
+        return;
+    }
+    setError(false);
+
+  }
+
   return (
-    <form>
+    <>
+        {/* {error && <Error>You must chose a value in both selectors</Error>} */}
+        <form
+            onSubmit={handleSubmit}
+        >
+            <SelectCurrency />
+            <SelectCripto />
 
-        <SelectCurrency />
-
-        <InputSubmit 
-            type="submit"
-            value="Quote"
-        />
-    </form>
+            <InputSubmit 
+                type="submit"
+                value="Quote"
+            />
+        </form>
+    </>
   )
 }
 
