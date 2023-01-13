@@ -78,7 +78,7 @@ function App() {
       <div>
         <Heading>Quote cryptocurrencies instantly</Heading>
         <Form setCurrencies={setCurrencies}/>
-        {/* {loading && <Spinner />} */}
+        {loading && <Spinner />}
         {quote?.PRICE && <Result quote={quote} />}
       </div>
     </Container>
