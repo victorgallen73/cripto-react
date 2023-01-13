@@ -53,7 +53,7 @@ function App() {
     if (Object.keys(currencies).length > 0) {
       setLoading(true);
       setQuote({});
-      
+
       const quoteCripto = async () => {
       const {currency, cripto} = currencies;
       const url = `https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${cripto}&tsyms=${currency}`
@@ -78,7 +78,7 @@ function App() {
       <div>
         <Heading>Quote cryptocurrencies instantly</Heading>
         <Form setCurrencies={setCurrencies}/>
-        {loading && <Spinner />}
+        {/* {loading && <Spinner />} */}
         {quote?.PRICE && <Result quote={quote} />}
       </div>
     </Container>
