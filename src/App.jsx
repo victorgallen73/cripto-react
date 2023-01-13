@@ -3,6 +3,7 @@ import CriptoImage from './img/criptos-img.png'
 import Form from "./components/Form"
 import { useEffect, useState } from "react"
 import Result from "./components/Result"
+import Spinner from "./components/Spinner"
 
 const Container = styled.div`
   max-width: 900px;
@@ -46,9 +47,13 @@ function App() {
 
   const  [ currencies, setCurrencies ] = useState({});
   const  [ quote, setQuote ] = useState({});
+  const  [ loading, setLoading ] = useState(false);
 
   useEffect(() => {
     if (Object.keys(currencies).length > 0) {
+      setLoading(true);
+      setQuote({});
+      
       const quoteCripto = async () => {
       const {currency, cripto} = currencies;
       const url = `https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${cripto}&tsyms=${currency}`
@@ -57,7 +62,7 @@ function App() {
       const result = await response.json();
       
       setQuote(result?.DISPLAY[cripto][currency]);
-
+      setLoading(false);
       }
 
       quoteCripto();
@@ -73,7 +78,7 @@ function App() {
       <div>
         <Heading>Quote cryptocurrencies instantly</Heading>
         <Form setCurrencies={setCurrencies}/>
-        {/* <Result /> */}
+        {loading && <Spinner />}
         {quote?.PRICE && <Result quote={quote} />}
       </div>
     </Container>
